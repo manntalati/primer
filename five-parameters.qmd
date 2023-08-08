@@ -705,7 +705,6 @@ intercept <- tidy$estimate[1]
 sex_male <- tidy$estimate[2]
 election_age <- tidy$estimate[3]
 interaction_term <- tidy$estimate[4]
-
 ```
 
 Now that we have extracted our values, we will create the intercept and slope values for our two different groups, females and males. Recall the following details about finding slopes and intercepts in an interaction model: 
@@ -803,19 +802,29 @@ Consider the "on average" interpretation first. The answer begins with the poste
 
 <!-- DK: We need to walk through the math. Start with the original formula. Replace the x's with the values for this person. Simplify. Plug in the parameters, which are distributions. This gives us the answer. It goes too fast to just go straight for the code. -->
 
+First we want to take a look at our mathematics once again:
+
+$$ lived\_after_i =  \beta_0 + \beta_1 male_i + \beta_2 c\_election\_age_i + \\ 
+\beta_3 male_i *  c\_election\_age_i + \epsilon_i $$
+
 ```{r}
+#| code-fold: false
 newobs = tibble(sex = c("Male", "Female"), 
                  election_age = 10)
-
 ```
 
+With `newobs` we are want to generate a sample of what a scenario may look like for a candidate's longevity. Here we establish the two sexes and the election age that we want to deal with for our candidates.
+
 ```{r}
+#| code-fold: false
 pe <- posterior_epred(object = fit_4, 
                       newdata = newobs) |> 
   as_tibble() |> 
   rename("Male" = `1`,
          "Female" = `2`)
 ```
+
+When we put this in terms of our mathematics the $beta_1$ becomes `1` as our `"Male"` term corresponds to `1`. The code that we have above is able to use our fitted model from above to generate a similar distribution of longevity for our candidates with the possiblity of how long they may live and whether male candidates will live longer than female candidates.
 
 ```{r}
 pe |> 
@@ -1289,14 +1298,24 @@ Just like in preceding chapters, our first objective remains with the use of **W
 
 Our next move involves the examination of **Justice**, which guides us in determining the best approach to representing the models we intend to construct. A little bit of mathematics won't pose major challenges. Translating these mathematical concepts into code will be accomplished with the help of **Courage**. With these Cardinal Virtues taken care of we now deal with **Temperance**. Our main objective is to generate posterior distributions for the parameters and comprehensively understand and interpret their significance. Finally, we conclude with the use of our models to address the questions. It is crucial to refine our questions to the greatest extent possible, as more detailed inquiries allow us to have the most precise answers.
 
-*Always Remember the Following:*
+*Key Lessons and Commands That Were Talked About:*
 
--   The major part of Wisdom is deciding what questions you can't answer because of the data you don't have.
+-   We can use `stan_glm()` to create fitted models.
+
+-   Use `posterior_epred()` when you want to estimate expected values.
 
 -   Avoid answering questions by working with parameters directly. Use `posterior_epred()` instead.
+
+-   Once we have create a posterior distribution for our data we can manipulate the model to answer our question at hand.
+
+-   Spend less time thinking about what parameters mean and more time using `posterior_epred()` and `posterior_predict()` to examine the implications of your models.
+
+*Always Remember the Following:*
+
+-   The major part of **Wisdom** is deciding what questions you can't answer because of the data you don't have.
+
+-   **Justice** will always include the assumptions of stability, representativeness, and unconfoundedness, where it is important to dive deep into why our assumptions may be false of the situation that we want to analyze.
 
 -   Good data science involves an intelligent tour of the space of possible models.
 
 -   Always think in terms of comparisons when using a predictive model.
-
--   Spend less time thinking about what parameters mean and more time using `posterior_epred()` and `posterior_predict()` to examine the implications of your models.
