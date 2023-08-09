@@ -1,10 +1,10 @@
 # Five Parameters {#sec-five-parameters}
 
-<!-- DK: Only do pp() once, on the last model. -->
+<!-- DK: Only do pp() once, on the last model. DONE-->
 
-<!-- DK: Add "The more data we have, the more narrow the posteriors which we create." -->
+<!-- DK: Add "The more data we have, the more narrow the posteriors which we create." DONE-->
 
-<!-- DK: Highlight the fact that we have complete data for some, but not all, the rows in the Preceptor Table, like the height example in Chapter 1. Would not be true if the question was about candidates in the future. In that case, no data in Preceptor Table. -->
+<!-- DK: Highlight the fact that we have complete data for some, but not all, the rows in the Preceptor Table, like the height example in Chapter 1. Would not be true if the question was about candidates in the future. In that case, no data in Preceptor Table. DONE-->
 
 *This chapter is still a DRAFT.*
 
@@ -28,7 +28,6 @@ library(broom.mixed)
 ```
 
 Follow the Cardinal Virtues and tackle each problem step by step. Remember the process: first we use Wisdom, next Justice, next Courage, and finally Temperance. Each Cardinal Virtue plays role in answering the question that we have at hand. From creating the Preceptor Table, to the Population Table, to converting the math into code, we are able to use the Cardinal Virtues as a tool to answer all of our questions.
-
 
 ## Wisdom
 
@@ -94,6 +93,8 @@ tibble(ID = c("Candidate 1", "Candidate 2", "...", "Candidate 10", "Candidate 11
   tab_spanner(label = "Outcome", columns = c(lived_after)) |>
   tab_spanner(label = "Covariates", columns = c(sex, year_elected, election_age))
 ```
+
+When we take a deeper look at the Preceptor Table above we can understand that we have complete data for some, but not all, of the rows in the Preceptor Table. For example, for the rows that concern with 2000 we know the exact longevity of a candidate because they have passed away. We are dealing with data that concerns candidates that are currently not alive. However, when we are using the Preceptor Table for more recent data like 2023, we are using our model to predict the longevity of our candidates. In addition, another important question arises from our discussion. Does the sex of a candidate affect their longevity? Do we need to dive deeper into the sex of a candidate to undestand how a candidate's longevity might change? These questions hint towards more detailed analysis that we need to make based on more refinement of the question. We need to once again talk with our boss to understand how we can refine the question at hand to answer the most accurately with the amount of data that we have.
 
 <!-- Summary sentence needed which explains clearly how this table, if you know all the entries, would answer the question. You can even hint at more detailed questions/analysis.  -->
 
@@ -358,15 +359,6 @@ We do not have a value for female. However we do have an intercept. `sexMale` is
 
 The main exception to this rule is a parameter whose value is so close to zero that it changes in its associated variable, within the general range of that variable, can't change the value of the outcome by much. For example, if the estimated value of $\beta_1$ were 0.1 (with a MAD_SD of 0.01), we might drop the variable, even though the parameter is 10 MAD_SD's away from zero, because 0.1 years is too small a value to matter.
 
-#### Model Checks
-
-```{r}
-#| code-fold: false
-pp_check(fit_1, plotfun = "hist", nreps = 3, binwidth = 5)
-```
-
-Our graph in the darker blue represents our actual data. As we can see with the lighter blue graph, our fitted model is able to generate a distribution that is similar when compared to the actual data. One important item that we want to note is that for the actual data there is no value that is under 0 or over 60 for longevity of a candidate, however, in the fitted model we are able to see several general values for which the longevity of a candidate is under 0 or over 60. For the most part our fitted model does a great job in generating a distribution through the "fake-data" simulation when compared to the actual data set.
-
 ### election_age
 
 To begin, let's model candidate lifespan after the election as a function of candidate lifespan prior to the election with our mathematics.
@@ -467,18 +459,6 @@ ggplot(ch7_a, aes(x = lived_after, y = election_age)) +
        y = "Age at Election") +
   theme_classic()
 ```
-
-#### Model Checks
-
-Now that we have created our fitted model we can perform model checks to ensure that our fitted model is reasonably accurate. We attempt to the make the model as accurate as possible, however, we can only view whether it is accurate through model checks that we need to perform. 
-
-```{r}
-#| code-fold: false
-#| warning: false
-pp_check(fit_2, plotfun = "hist", nreps = 3, binwidth = 10)
-```
-
-With the lighter blue graph, our fitted model is able to generate a distribution that is reasonably similar to the actual data. However, the "fake-data" produces some values for longevity which are *impossible.* We know that the longevity of a person can not decrease below 0. But, with our "fake-data" simulations, we see several values that are less than 0. This is a flaw in our model. Is it a serious flaw? That is tough to decide. For the most part though our fitted model does a great job in generating a distribution through the "fake-data" simulation when compared to the actual data set.
 
 <!-- This is a critical point. Maybe give a precise example? Go through the math slowly, like ModernDive does? Highlight this somehow? At the very least, we should emphasize the point for each model going forward. -->
 
@@ -606,17 +586,6 @@ ggplot(ch7_a, aes(x = lived_after, y = election_age, color = sex)) +
 
 The posterior for male/female years lived shows a huge gap between the two values. We want to take into factor the prior knowledge that we have regarding female and male lived after ages. The females tend to live longer than the males based on our prior knowledge which presents a problem with the graph that we have above. With our graph we have a higher tendency of the male candidates living longer simply because of the amount of data that we have. We have more data for the male candidates running for election because they tend to run for election more than the female candidates which in turn skews the lived after predictions that we can make for both sorts of candidates.
 
-#### Model Checks
-
-With the fitted model that we have created we are able to perform model checks. The model checks that we perform will help us understand how accurate our model is because we need to be able to ensure that our fitted model is reasonably accurate. We can view our model through model checks that interpret the residuals (error), outcome, and "fake-data" simulations. 
-
-```{r}
-#| code-fold: false
-pp_check(fit_3, plotfun = "hist", nreps = 3, binwidth = 0.1)
-```
-
-Our fitted model generates a distribution that is very similar to the distribution of values from our actual data.
-
 ### election_age, sex and election_age*sex
 
 Let's create another model. This time, however, the numeric outcome variable of `lived_after` is a function of the two explanatory variables we used above, `election_age` and `sex`, and of their interaction. To look at interactions, we need 5 parameters, which is why we needed to wait until this chapter to introduce the concept.
@@ -625,14 +594,14 @@ Let's create another model. This time, however, the numeric outcome variable of 
 
 <!-- DK: This should wrap. Does it? -->
 
-$$ lived\_after_i =  \beta_0 + \beta_1 male_i + \beta_2 c\_election\_age_i + \\ 
-\beta_3 male_i *  c\_election\_age_i + \epsilon_i $$
+$$ lived\_after_i =  \beta_0 + \beta_1 male_i + \beta_2 c\_election\_age_i + 
+\\ \beta_3 male_i *  c\_election\_age_i + \epsilon_i $$
 
 * Our outcome variable is still $lived\_after_i$. We want to know how many years a candidate will live after an election. Our explanatory variables as the same as before. $male_i$ is one for male candidates and zero for female candidates. $c\_election\_age_i$ the number of years a candidate has lived before the election, relative to the average value for all candidates. In this model, we have a third predictor variable: the interaction between $male_i$ and $c\_election\_age_i$. 
 
 * $\beta_0$ is the average number of years lived after the election for women, who on the day of election, have been alive the average number of years of all candidates. In a sense, this is the same meaning as in the previous model, without an interaction term. But, always remember that the meaning of a parameter is conditional on the model in which it is embedded. Even if a parameter is called $\beta_0$ in two different regressions does necessitate that it means the same thing in both regressions. Parameter names are arbitrary, or at least simply a matter of convention.
 
-* $\beta_1$ does not have a simple interpretation as a stand-alone parameter. It is a measure of how different women are from men. However, $\beta_0 + \beta_1$ has a straightforward meaning exactly analogous to the meaning of $\beta_0$. The sum  is the average number of years lived after the election for *men*, who on the day of election, have been alive the average number of years of all candidates.
+* $\beta_1$ does not have a simple interpretation as a stand-alone parameter. It is a measure of how different women are from men. However, $\beta_0 + \beta_1$ has a straightforward meaning exactly analogous to the meaning of $\beta_0$. The sum is the average number of years lived after the election for *men*, who on the day of election, have been alive the average number of years of all candidates.
 
 * $\beta_2$ is the coefficient of $c\_election\_age_i$. It it just the slope for women. It is the average difference in $lived\_after_i$ between two women, one of whom has an $c\_election\_age_i$ value of 1 greater than the other. In our last example,  $\beta_2$ was the slope for the whole population. Now we have different slopes for different genders. 
 
@@ -643,7 +612,6 @@ $$ lived\_after_i =  \beta_0 + \beta_1 male_i + \beta_2 c\_election\_age_i + \\
 With the help of **Courage** we can translate all of the math from above into code. 
 
 ```{r}
-#| cache: true
 #| code-fold: false
 fit_4 <- stan_glm(data = ch7_a,
                   formula = lived_after ~ sex*election_age,
@@ -675,7 +643,7 @@ With the fitted model that we have created we are able to perform model checks. 
 pp_check(fit_4, plotfun = "hist", nreps = 3, binwidth = 1)
 ```
 
-For the most part the model is really accurate as we are able to see the distribution is very similar to the actual data proving it to be reasonably accurate. 
+Our graph in the darker blue represents our actual data. As we can see with the lighter blue graph, our fitted model is able to generate a distribution that is similar when compared to the actual data. However, the "fake-data" produces some values for longevity which are *impossible.* One important item that we want to note is that for the actual data there is no value that is under 0 or over 60 for longevity of a candidate, however, in the fitted model we are able to see several generated values for which the longevity of a candidate is under 0 or over 60. We know that the longevity of a person can not decrease below 0. This is a flaw in our model. Is it a serious flaw? That is tough to decide. For the most part though our fitted model does a great job in generating a distribution through the "fake-data" simulation when compared to the actual data set.
 
 ### Interaction model
 
@@ -847,9 +815,9 @@ pe |>
     theme_classic()
 ```
 
-<!-- DK: Do males live longer than females? That is surprising! Discuss again, even though we discussed above. This is sort of a posterior predictive check using your knowledge of the world. done added discussion-->
+<!-- DK: Do males live longer than females? That is surprising! Discuss again, even though we discussed above. This is sort of a posterior predictive check using your knowledge of the world. DONE added discussion-->
 
-Looking at our posterior probability distributions above, we can see that male candidates are expected to live longer. But how much longer? Does the initial age affect the posterior for expected years after the candidate's election? Based on our previous knowledge we know that females tend to live longer than the males which is surprising. With our graph we have a higher tendency of the male candidates living longer simply because of the amount of male candidates that run for election. As in previous chapters, we can manipulate distributions in, more or less, the same way that we manipulate simple numbers. If we want to know the difference between two posterior distributions, we can simply subtract. 
+Looking at our posterior probability distributions above, we can see that male candidates are expected to live longer. But how much longer? Does the initial age affect the posterior for expected years after the candidate's election? Based on our previous knowledge we know that females tend to live longer than the males which is surprising. The more data we have, the more narrow the posteriors are which we can create. Our data includes a great percentage of male candidates that run for election which is why we are more accurate within our posterior check for male candidates and their longevity. As in previous chapters, we can manipulate distributions in, more or less, the same way that we manipulate simple numbers. If we want to know the difference between two posterior distributions, we can simply subtract. 
 
 ```{r}
 pe <- posterior_epred(object = fit_4, 
@@ -1053,7 +1021,7 @@ Also, because this is an idealized table, we would know age at time of death ass
 
 First, do we need a **causal** or **predictive** model? In this case, the model is clearly causal, so our Preceptor Table will have two columns for the potential outcomes. If all you need to know to answer the question is the outcome under one value of the treatment, then the model is predictive. Example: What is the life expectancy for all candidates if they were to win? Here we a question that implies a comparison, *for a single individual unit*, between two states of the world, when where they get treatment and one where they do not get treatment.
 
-Second, what is the outcome? A candidate's life expectancy after winning elections is the **outcome**. When we take a look at the questions we discover a flaw exists. The individual that asked this question did not tell us where or when we are looking at these questions. It is important to understand where and when that we are answering these questions because otherwise our data could be not accurately applied to the whole country, nation, or specific state. For the questions that we have at hand we will be talking about all the adults in July 1, 2012 within the United States which will allow us to answer the questions more accurately. 
+Second, what is the outcome? A candidate's longevity after winning elections is the **outcome**. When we take a look at the questions we discover a flaw exists. The individual that asked this question did not tell us where or when we are looking at these questions. It is important to understand where and when that we are answering these questions because otherwise our data could be not accurately applied to the whole country, nation, or specific state. For the questions that we have at hand we will be talking about all the candidates in elections from 2000 to 2023 within the United States which will allow us to answer the questions more accurately. 
 
 Third, what are the **units**? Our units for this scenario would be individuals because the questions are about the attributes of unique candidates.
 
@@ -1136,6 +1104,22 @@ ch7_b |>
 ```
 
 This plot shows that candidates that win the election live much longer, on average, than candidates that lose the election. Is there an intuitive explanation for why this might be? 
+
+```{r}
+ch7_b |>
+  filter(close_race) |>
+  ggplot(aes(x = election_age, y = lived_after, color = sex)) +
+  geom_point() +
+  labs(title = "US Gubernatorial Candidate Years Lived Post Election",
+       subtitle = "Male candidates tend to live longer post-election",
+       x = "Candidate's Age at Election",
+       y = "Years Lived After Election",
+       color = "Sex", 
+       caption = "Data: Barfort, Klemmensen and Larsen (2019)") +
+  scale_color_discrete(labels=c('Female', 'Male')) +
+  scale_y_continuous(labels = scales::label_number()) +
+  theme_classic()
+```
 
 ### Validity
 
@@ -1231,7 +1215,75 @@ knitr::include_graphics("other/images/Courage.jpg")
 
 Once we have the mathematical structure of the model, we use **Courage** to create a fitted model. This process can involve the modification and selection of variables.
 
-### Mathematics
+### won and sex
+
+Within this section we are concerned with the relationship between a candidate winning and their sex to see how that plays a role in affecting a candidate's longevity. With the information that we gain from this section we will be one step closer to answering our question at hand. 
+
+#### Mathematics
+
+Our math is as follows:
+
+$$ lived\_after_i =  \beta_0 + \beta_1 won_i + \beta_2 male_i + \epsilon_i $$
+- $lived\_after_i$ stands for the number of years lived after the election for candidate. 
+
+- $won_i$ stands for the whether a candidate has won the election. 
+
+- $male_i$ stands for the whether a candidate is male and how that may affect the candidate's longevity.
+
+- $\epsilon_i$ is the "error term," the difference between the actual years-lived for candidate $i$ and the modeled years-lived. $\epsilon_i$ is normally distributed with a mean of 0 and a standard deviation of $\sigma$. 
+
+#### Fitted Model
+
+```{r}
+#| code-fold: false
+fit_5 <- stan_glm(data = filter(ch7_b, close_race),
+                  formula = lived_after ~ won + sex,
+                  refresh = 0,
+                  seed = 12)
+```
+
+Having fit the model, we can look at a printed summary.
+
+```{r}
+#| code-fold: false
+print(fit_5, detail = FALSE)
+```
+
+### won and election_age
+
+In this section we want to know more about the relationship between a candidate winning and their election age to see how that plays a role in affecting a candidate's longevity.
+
+#### Mathematics
+
+$$ lived\_after_i =  \beta_0 + \beta_1 won_i + \beta_2 c\_election\_age_i + \epsilon_i $$
+* Our outcome variable will still be $lived\_after_i$. We are still concerned with how many years a candidate will live after an election. Our explanatory variables have only changed from before. $won_i$ will be used to determine whether a candidate has won the election. $c\_election\_age_i$ is the number of years a candidate will have lived before the election, relative to the average value for all candidates.
+
+* $\beta_0$ is the average number of years for women to live after the election, who on the day of the election, have been alive for the average number of years of all the candidates. But, always remember that the meaning of a parameter is conditional on the model in which it is embedded. Even if a parameter is called $\beta_0$ in two different regressions does mean that they will be used the same within both regressions.
+
+* $\beta_1$ does not have a simple interpretation as a stand-alone parameter. It used as a measure to see whether a candidate has won the election. When the candidate has won the election we want that to factor into the candidate's longevity in the future because of the question we are answering within this section. However, $\beta_0 + \beta_1$ has a straightforward meaning exactly analogous to the meaning of $\beta_0$. The sum is the average number of years lived after the election for *men*, who on the day of election, have won the election.
+
+* $\beta_2$ is the coefficient of $c\_election\_age_i$. It it just the slope for women. We use this coefficient as the average difference in $lived\_after_i$ between two women, one of whom has an $c\_election\_age_i$ value of 1 greater than the other.
+
+#### Fitted Model
+
+```{r}
+#| code-fold: false
+fit_6 <- stan_glm(data = filter(ch7_b, close_race),
+                  formula = lived_after ~ won + election_age,
+                  refresh = 0,
+                  seed = 12)
+```
+
+```{r}
+#| code-fold: false
+print(fit_6, detail = FALSE)
+```
+
+### won, election_age, and sex
+
+In this section we will be putting together our two previous topics to understand how a candidate's election age, sex, and whether they won the election plays a role in their longevity. With the mathematics and model that we will be able to create we can discover an answer to the question that we have been asking ourselves from the beginning of the chapter.
+
+#### Mathematics
 
 The math is simple to calculate once we know what we want to discover through our questions:
 
@@ -1247,11 +1299,11 @@ $\beta_3$ affects the outcome with our candidate's election age. The election ag
 
 $\epsilon$ is our error factor. When we are creating our formula, it is not perfect. No formula can be entirely perfect. With $\epsilon$ we can account for the error that is associated with each factor in our formula.
 
-### Fitted Model
+#### Fitted Model
 
 ```{r}
 #| code-fold: false
-fit_5 <- stan_glm(data = filter(ch7_b, close_race),
+fit_7 <- stan_glm(data = filter(ch7_b, close_race),
                   formula = lived_after ~ won + sex + election_age,
                   refresh = 0,
                   seed = 12)
@@ -1261,19 +1313,21 @@ Having fit the model, we can look at a printed summary.
 
 ```{r}
 #| code-fold: false
-print(fit_5, detail = FALSE)
+print(fit_7, detail = FALSE)
 ```
 
-Looking at our results, you can see that our intercept value is around `r round(coef(fit_5)["(Intercept)"], 0)`. The average electoral candidate that won, who had been alive the average number of years of all candidates, would live another 2 years or so after the election. 
+Looking at our results, you can see that our intercept value is around `r round(coef(fit_7)["(Intercept)"], 0)`. The average electoral candidate that won, who had been alive the average number of years of all candidates, would live an additional four years on top of the intercept value's years or so after the election. 
 
-### Model Checks
+#### Model Checks
 
 Model checks help us understand how accurate our model is to ensure that the fitted model that we have created is reasonably accurate when compared to the actual data. We can view our model through the posterior predictive check that simulates the data upon our fitted model to generate a distribution.
 
 ```{r}
 #| code-fold: false
-pp_check(fit_5, plotfun = "scatter", nreps = 3)
+pp_check(fit_7, plotfun = "scatter", nreps = 3)
 ```
+
+Let's dive deeper into the graphs that we have above. On the y-axis we have the points plotted for the candidate's longevity based on the actual data of each candidate's election age, sex, and whether they have won the election. On the x-axis we have the points plotted for the candidate's longevity based on the "fake-data" simulation of each candidate's election age, sex, and whether they have won the election. However, the "fake-data" produces some values for longevity which are *impossible.* One important item that we want to note is that for the actual data there is no value that is under 0 for the longevity of a candidate, however, in the fitted model we are able to see several generated values for which the longevity of a candidate is under 0. This is a flaw in our model. Is it a serious flaw? That is tough to decide. For the most part our fitted model does a great job in generating a distribution through the "fake-data" simulation when compared to the actual data set.
 
 ## Temperance
 
