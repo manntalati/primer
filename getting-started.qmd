@@ -2,11 +2,9 @@
 
 <!-- Need to rethink how students start the process, combining this material with the tutorial.helpers Getting Started tutorial and then r4ds.tutorials Chapter 1. We would like this section to be as short as possible.  -->
 
-
 <!-- We do not run set_rstudio_settings() and set_binary_only_in_r_profile() because these functions only work with an associated RStudio instance. There is no such instance when you render a qmd file, even if you render that file from within RStudio. (I think!) We do, however, run the install code for the packages. We do this in order to ensure that the code works when students try to run it, even though this is somewhat aggressive from the point of view of our co-authors. -->
 
 *You can never look at the data too much.* -- Mark Engerman
-
 
 The world confronts us. Make decisions we must.
 
@@ -87,6 +85,7 @@ knitr::include_graphics("getting-started/images/top_right_window.png")
 The main two tabs we will be using are Environment and Git (which is not yet visible). The Environment tab shows you the datasets and variables you currently have loaded into R. In this case, we loaded in a dataset with 3407 rows and 5 columns and a variable `x` equal to 5. For you, the Environment should be empty. Let's change that. Go to your Console and type:
 
 ```{r}
+#| code-fold: false
 x <- 5
 ```
 
@@ -96,7 +95,6 @@ Switch to the bottom right pane:
 
 ```{r}
 #| echo: false
-
 knitr::include_graphics("getting-started/images/bottom_right_window.png")
 ```
 
@@ -111,7 +109,6 @@ R *packages*, also known as *libraries*, extend the power of R by providing addi
 ```{r}
 #| echo: false
 #| fig.cap: R is to R packages as a new phone is to apps for that phone.
-
 knitr::include_graphics("getting-started/images/R_vs_R_packages.png")
 ```
 
@@ -127,7 +124,6 @@ The process is very similar for an R package. You need to:
 ```{r}
 #| echo: false
 #| fig.cap: Installing versus loading an R package
-
 knitr::include_graphics("getting-started/images/install_vs_load.jpg")
 ```
 
@@ -139,7 +135,7 @@ Just for this chapter, execute this command in your R Console.
 
 ```{r}
 #| eval: false
-
+#| code-fold: false
 options("pkgType" = "binary")
 ```
 
@@ -149,7 +145,7 @@ Let's *install* a useful package. At the Console pane within RStudio, type:
 
 ```{r}
 #| output: false
-
+#| code-fold: false
 install.packages("remotes")
 ```
 
@@ -159,6 +155,7 @@ One tricky aspect of this process is that R will occasionally ask you:
 
 ```{bash}
 #| eval: false
+#| code-fold: false
 Do you want to install from sources the packages which 
 need compilation? (Yes/no/cancel)
 ```
@@ -177,6 +174,7 @@ After you install a package, you need to "load" it by using the `library()` comm
 
 ```{r}
 #| output: false
+#| code-fold: false
 library(remotes)
 ```
 
@@ -194,7 +192,7 @@ Let's install another package:
 
 ```{r}
 #| eval: false
-
+#| code-fold: false
 install.packages("tutorial.helpers")
 ```
 
@@ -204,7 +202,7 @@ Let's install another package:
 
 ```{r}
 #| eval: false
-
+#| code-fold: false
 install.packages("tidyverse")
 ```
 
@@ -222,7 +220,7 @@ Let's install two packages that are not available from CRAN: **r4ds.tutorials** 
 
 ```{r}
 #| output: false
-
+#| code-fold: false
 library(remotes)
 install_github("PPBDS/r4ds.tutorials")
 ```
@@ -235,6 +233,7 @@ If the download fails, try
 
 ```{r}
 #| eval: false
+#| code-fold: false
 options("timeout" = 600)
 ```
 
@@ -242,9 +241,9 @@ This gives the download more time to complete. Try `install_github("PPBDS/r4ds.t
 
 Next, copy and paste the following to the R Console:
 
-
 ```{r}
 #| output: false
+#| code-fold: false
 remotes::install_github("PPBDS/all.primer.tutorials")
 ```
 
@@ -293,6 +292,7 @@ There are a few terms, tips, and tricks that you should know before getting star
 -   *Functions*: these perform tasks by taking an input called an *argument* and returning an output.
 
 ```{r}
+#| code-fold: false
 sqrt(64)
 ```
 
@@ -325,6 +325,7 @@ You should have done the following:
 
 ```{r}
 #| eval: false
+#| code-fold: false
 options("pkgType" = "binary")
 install.packages("remotes")
 install.packages("tutorial.helpers")
@@ -335,10 +336,10 @@ install.packages("tidyverse")
 
 ```{r}
 #| eval: false
+#| code-fold: false
 remotes::install_github("PPBDS/r4ds.tutorials")
 remotes::install_github("PPBDS/all.primer.tutorials")
 ```
-
 
 Let's get started.
 
