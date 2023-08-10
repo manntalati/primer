@@ -38,7 +38,7 @@ knitr::include_graphics("other/images/Wisdom.jpg")
 
 **Wisdom** is the first Cardinal Virtue. It requires the creation of a Preceptor Table, an examination of our data, and a determination, using the concept of "validity," as to whether or not we can (reasonably!) assume that the two come from the same population.
 
-Consider the following questions:
+Consider the following question:
 
 *How long do gubernatorial candidates live after the election?*
 
@@ -53,7 +53,6 @@ To create our Preceptor Table, we need to ask ourselves a couple of questions ba
 First, do we need a **causal** or **predictive** model? In our question above we have a predictive model as we only have one outcome which is a gubernatorial candidate's longevity.
 
 Second, what is the outcome? A person's longevity after the election will be the **outcome**. The questions, however, leave unclear details. For example, what time period does the Preceptor Table cover? In order to dive deeper into these questions we need to engage in a conversation with the person that is asking us these questions.
-
 
 Third, what are the **units**? Our units for this scenario would be gubernatorial candidates because the questions are about the life expectancy of unique candidates. Here, we want to discuss all gubernatorial candidates from 2000 through 2023 in the United States. However, another question arises: are we looking for the average of all gubernatorial candidates? Are we looking specifically into the average of all female gubernatorial candidates? Or male gubernatorial candidates? In our situation, it is important to refine the question because that allows us to accurately respond to the question at hand.
 
@@ -94,9 +93,9 @@ tibble(ID = c("Candidate 1", "Candidate 2", "...", "Candidate 10", "Candidate 11
   tab_spanner(label = "Covariates", columns = c(sex, year_elected, election_age))
 ```
 
-When we take a deeper look at the Preceptor Table above we can understand that we have complete data for some, but not all, of the rows in the Preceptor Table. For example, for the rows that concern with 2000 we know the exact longevity of a candidate because they have passed away. We are dealing with data that concerns candidates that are currently not alive. However, when we are using the Preceptor Table for more recent data like 2023, we are using our model to predict the longevity of our candidates. In addition, another important question arises from our discussion. Does the sex of a candidate affect their longevity? Do we need to dive deeper into the sex of a candidate to undestand how a candidate's longevity might change? These questions hint towards more detailed analysis that we need to make based on more refinement of the question. We need to once again talk with our boss to understand how we can refine the question at hand to answer the most accurately with the amount of data that we have.
+When we take a deeper look at the Preceptor Table above we can understand that we have complete data for some, but not all, of the rows in the Preceptor Table. For example, for the rows that concern with 2000 we know the exact longevity of a candidate because they have passed away. We are dealing with data that concerns candidates that are currently not alive. However, when we are using the Preceptor Table for more recent data like 2023, we are using our model to predict the longevity of our candidates. In addition, another important question arises from our discussion. Does the sex of a candidate affect their longevity? Do we need to dive deeper into the sex of a candidate to understand how a candidate's longevity might change? These questions hint towards more detailed analysis that we need to make based on more refinement of the question. We need to once again talk with our boss to understand how we can refine the question at hand to answer the most accurately with the amount of data that we have.
 
-<!-- Summary sentence needed which explains clearly how this table, if you know all the entries, would answer the question. You can even hint at more detailed questions/analysis.  -->
+<!-- Summary sentence needed which explains clearly how this table, if you know all the entries, would answer the question. You can even hint at more detailed questions/analysis.  DONE-->
 
 ### EDA of `governors`
 
@@ -504,7 +503,7 @@ print(fit_3, detail = FALSE)
 Looking at our results, you can see that our intercept value is around `r round(coef(fit_3)["(Intercept)"], 0)`. The average female candidate, who had been alive the average number of years of all candidates, would live another `r round(coef(fit_3)["(Intercept)"], 0)` years or so after the election. 
 
 Note that `sexMale` is around `r round(coef(fit_3)["sexMale"], 0)`. This is our coefficient, $\beta_1$. We need to connect this value to our intercept value to get something meaningful. Using the formula $\beta_0 + \beta_1$, we find out that the number of years the average male candidate ---  who, on the day of election, is the average age of all candidates --- would live is around `r round(coef(fit_3)["(Intercept)"] + coef(fit_3)["sexMale"], 0)` years.  
-Now take a look at the coefficient for $c\_election\_age_i$, $\beta_2$. The median of the posterior, `r round(coef(fit_3)["election_age"], 1)`, represents the slope of the model. When comparing two candates who differ by one year in `election_age`, we expect that they will differ by `r round(coef(fit_3)["election_age"], 1)` years in `lived_after`. It makes sense that this value is negative. The more years a candidate has lived, the fewer years the candidate has left to live. So, for every extra year a candidate is alive before an election, their lifespan after the election will be `r abs(round(coef(fit_3)["election_age"], 1))` years lower, on average.
+Now take a look at the coefficient for $c\_election\_age_i$, $\beta_2$. The median of the posterior, `r round(coef(fit_3)["election_age"], 1)`, represents the slope of the model. When comparing two candidates who differ by one year in `election_age`, we expect that they will differ by `r round(coef(fit_3)["election_age"], 1)` years in `lived_after`. It makes sense that this value is negative. The more years a candidate has lived, the fewer years the candidate has left to live. So, for every extra year a candidate is alive before an election, their lifespan after the election will be `r abs(round(coef(fit_3)["election_age"], 1))` years lower, on average.
 
 We will now show you the parallel slopes model, which was created using the same process explained in the prior chapter. All we've done here is extracted the values for our intercepts and slopes, and separated them into two groups. This allows us to create a `geom_abline` object that takes a unique slope and intercept value, so we can separate the male and female observations. 
 
@@ -526,7 +525,6 @@ tidy
 intercept <- tidy$estimate[1]
 sex_male <- tidy$estimate[2]
 election_age <- tidy$estimate[3]
-
 ```
 
 ```{r}
@@ -1027,7 +1025,7 @@ Third, what are the **units**? Our units for this scenario would be individuals 
 
 Fourth, do we have a **treatment**? Yes. In any causal model, there is at least one covariate which is defined as the "treatment," something which we can manipulate so that some units receive one version and other units get a different version. A "treatment" is just a covariate in which we *can* manipulate and *need* to manipulate, at least in theory, to answer the question. In this case, the treatment is winning the election for candidates.
 
-Let's look at our refined question to create our Preceptor Table:
+Let's look at our now refined question to create our Preceptor Table:
 
 *What is the average causal effect of winning an election on candidates for state or federal office in the Chicago, Illinois in 2023?*
 
@@ -1065,13 +1063,14 @@ Note: the values that have a star next to them symbolize the possible values tha
 
 Recall: a Preceptor Table is the smallest possible table with rows and columns such that, if there is no missing data, all our questions are easy to answer. To answer questions --- like "What is the average causal effect of winning an election on candidates for state or federal office in the United States in 2023?" --- we need a row for every individual.
 
-### EDA of `governors`
+### Explanatory Data Analysis of `governors`
 
 Once again we will look at the **primer.data** package which includes the `governors` data set which features demographic information about candidates for governor in the United States. @barfort2020 gathered this data and concluded that winning a gubernatorial election increases a candidate's lifespan.
 
 There are `r ncol(governors)` variables and `r scales::comma(nrow(governors))` observations. In this section, we will only be looking at the variables `sex`, `lived_after`, `election_age`, `won`, and `close_race`. 
 
 ```{r}
+#| code-fold: false
 ch7_b <- governors |> 
   mutate(won = if_else(win_margin > 0, TRUE, FALSE)) |> 
   mutate(close_race = if_else(abs(win_margin) < 5, TRUE, FALSE)) |> 
@@ -1120,6 +1119,25 @@ ch7_b |>
   scale_y_continuous(labels = scales::label_number()) +
   theme_classic()
 ```
+
+When we take a look at this plot we can see that male candidates run for election more than females and have been able to live much longer, on average, than the female candidates. However, a key point that we want to look at here, is that there are not that many female candidates. With the amount of data that we have and the low amount of female candidates within that data we can see that there tends to be a huge gap because of the low number of females running for election. The skewed data could pose for a problem for us when we want to predict a candidate's longevity. Is this a huge problem? It is tough to say.
+
+```{r}
+ch7_b |>
+  ggplot(aes(x = sex, y = lived_after, color = won)) +
+  geom_boxplot() +
+  labs(title = "US Gubernatorial Candidate Years Lived Post Winning Election",
+       subtitle = "Male candidates who won elections tend to live the longest post-election",
+       caption = "Data: Barfort, Klemmensen and Larsen (2019)",
+       x = "Candidate's Sex",
+       y = "Years Lived After Election",
+       color = "Election Result") +
+  scale_color_discrete(labels=c('Lost', 'Won')) +
+  scale_y_continuous(labels = scales::label_number()) +
+  theme_classic()
+```
+
+Male candidates who win the election seem to live sightly longer than male candidates who lose the election. Regardless of winning the election, we can see a clear distinction between the years lived after between two candidates. The candidate's sex plays a huge role in how long they live post-election. Will the candidate's ability to win the election play a huge role? So far, we can see a small advantage to the male candidates that win the election, however, there seems to be a advantage for the female candidates that lose the election. Is this strong enough? Let us explore our data within this section to find out.
 
 ### Validity
 
@@ -1223,7 +1241,7 @@ Within this section we are concerned with the relationship between a candidate w
 
 Our math is as follows:
 
-$$ lived\_after_i =  \beta_0 + \beta_1 won_i + \beta_2 male_i + \epsilon_i $$
+$$ lived\_after_i =  \beta_0 + \beta_1 male_i + \beta_2 won_i + \epsilon_i $$
 - $lived\_after_i$ stands for the number of years lived after the election for candidate. 
 
 - $won_i$ stands for the whether a candidate has won the election. 
@@ -1248,6 +1266,11 @@ Having fit the model, we can look at a printed summary.
 #| code-fold: false
 print(fit_5, detail = FALSE)
 ```
+
+Looking at our results, you can see that our intercept value is around `r round(coef(fit_5)["(Intercept)"], 0)`. The average female candidate, who had been alive the average number of years of all candidates, would live another `r round(coef(fit_5)["(Intercept)"], 0)` years or so after the election. 
+
+Note that `sexMale` is around `r round(coef(fit_5)["sexMale"], 0)`. This is our coefficient, $\beta_1$. We need to connect this value to our intercept value to get something meaningful. Using the formula $\beta_0 + \beta_1$, we find out that the number of years the average male candidate ---  who, on the day of election, is the average age of all candidates --- would live is around `r round(coef(fit_5)["(Intercept)"] + coef(fit_5)["sexMale"], 0)` years.  
+Now let's look at the coefficient for `won`, $\beta_2$. The median of the posterior, `r round(coef(fit_5)["won"], 1)`, represents the slope of the model when candidates win the election. When comparing two candidates who differ in `won`, we expect that they will differ by `r round(coef(fit_5)["won"], 1)` years in `lived_after`. Does it makes sense that this value is positive? Based on our results a candidate will live longer when they win the election. The more years a candidate has lived, the fewer years the candidate has left to live.
 
 ### won and election_age
 
@@ -1278,6 +1301,10 @@ fit_6 <- stan_glm(data = filter(ch7_b, close_race),
 #| code-fold: false
 print(fit_6, detail = FALSE)
 ```
+
+-   The variable before the tilde, `lived_after`, is our outcome. We want to use `lived_after` because we are concerned with a candidate's longevity.
+
+-   Here we have two explanatory variables: `election_age` and `won`. We want to use these two variables because we are concerned with the relationship between a candidate winning the election and the age that they are at the election.
 
 ### won, election_age, and sex
 
@@ -1342,7 +1369,9 @@ Recall the questions with which we began the chapter:
 
 *Does winning the election affect a candidate's longevity?*
 
-When we end **Temperance** we end with the discussion of the Preceptor's Posterior. The Preceptor's Posterior as mentioned above is the posterior we calculate when all the assumptions we made under Wisdom and Justice are correct. However, most of the times these are not correct! With all of the assumptions that we looked at in the Wisdom, Justice, and Courage sections, it is safe to assume that there are several possibilities where our posterior may not hold to be true. So it is important that we maintain humility when we deal with our posterior. However, we do hope that our posterior will be a close approximation of the Preceptor’s Posterior.
+When we end **Temperance** we end with the discussion of the Preceptor's Posterior. The Preceptor's Posterior as mentioned above is the posterior we calculate when all the assumptions we made under Wisdom and Justice are correct. However, most of the times these are not correct! With all of the assumptions that we looked at in the Wisdom, Justice, and Courage sections, it is safe to assume that there are several possibilities where our posterior may not hold to be true. However, we do hope that our posterior will be a close approximation of the Preceptor’s Posterior.
+
+We need to maintain humility when we are making our inferences and decisions.
 
 ## Summary
 
